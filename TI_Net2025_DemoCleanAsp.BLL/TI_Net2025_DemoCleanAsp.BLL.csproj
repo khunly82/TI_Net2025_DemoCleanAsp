@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Isopoh.Cryptography.Argon2" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TI_Net2025_DemoCleanAsp.DAL\TI_Net2025_DemoCleanAsp.DAL.csproj" />
+    <ProjectReference Include="..\TI_Net2025_DemoCleanAsp.DL\TI_Net2025_DemoCleanAsp.DL.csproj" />
+  </ItemGroup>
+
+</Project>
