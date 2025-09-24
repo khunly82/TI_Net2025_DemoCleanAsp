@@ -11,6 +11,11 @@ namespace TI_Net2025_DemoCleanAsp.Models.Users
         public string Email { get; set; } = null!;
 
         [Required]
+        [MaxLength(50)]
+        [DisplayName("Username")]
+        public string Username { get; set; } = null!;
+
+        [Required]
         [DataType(DataType.Password)]
         [DisplayName("Mot de passe")]
         public string Password { get; set; } = null!;

@@ -10,6 +10,7 @@ namespace TI_Net2025_DemoCleanAsp.Mappers
             return new User()
             {
                 Email = form.Email,
+                Username = form.Username,
                 Password = form.Password,
             };
         }

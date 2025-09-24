@@ -13,10 +13,11 @@ namespace TI_Net2025_DemoCleanAsp.DAL.Repositories
             using (SqlConnection connection = new SqlConnection(_connectionString))
             using (SqlCommand command = connection.CreateCommand())
             {
-                command.CommandText = @$"INSERT INTO [User](EMAIL,PASSWORD,ROLE)
-                                        VALUES(@email,@password,@role)";
+                command.CommandText = @$"INSERT INTO [User](EMAIL,USERNAME,PASSWORD,ROLE)
+                                        VALUES(@email,@username,@password,@role)";
 
                 command.Parameters.AddWithValue("@email", entity.Email);
+                command.Parameters.AddWithValue("@username", entity.Username);
                 command.Parameters.AddWithValue("@password", entity.Password);
                 command.Parameters.AddWithValue("@role", entity.Role.ToString());
 
@@ -77,6 +78,7 @@ namespace TI_Net2025_DemoCleanAsp.DAL.Repositories
             {
                 Id = (int)reader["ID"],
                 Email = (string)reader["EMAIL"],
+                Username = (string)reader["USERNAME"],
                 Password = (string)reader["PASSWORD"],
                 Role = Enum.Parse<UserRole>((string)reader["ROLE"]),
             };

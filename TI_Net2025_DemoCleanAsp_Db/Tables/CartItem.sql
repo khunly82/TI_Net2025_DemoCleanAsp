@@ -1,0 +1,7 @@
+﻿CREATE TABLE [dbo].[CartItem]
+(
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY,
+	[CartId] INT NOT NULL FOREIGN KEY REFERENCES [Cart]([Id]),
+	[ProductId] INT NOT NULL FOREIGN KEY REFERENCES [Product]([Id]),
+	[Quantity] INT NOT NULL CHECK ([Quantity] > 0)
+)

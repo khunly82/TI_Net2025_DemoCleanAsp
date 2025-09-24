@@ -61,6 +61,13 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\User.sql" />
+    <Build Include="Tables\Category.sql" />
+    <Build Include="Tables\Product.sql" />
+    <Build Include="Tables\Cart.sql" />
+    <Build Include="Tables\CartItem.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Scripts\InitData.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TI_Net2025_DemoCleanAsp_Db.publish.xml" />
