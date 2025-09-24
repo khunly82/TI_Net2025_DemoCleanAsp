@@ -8,7 +8,7 @@ namespace TI_Net2025_DemoCleanAsp.DAL.Repositories
     {
         private readonly string _connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=DemoAspClean.Db;Trusted_Connection=True;";
 
-        public void Add(User entity)
+        public void Add(User user)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             using (SqlCommand command = connection.CreateCommand())
@@ -16,10 +16,10 @@ namespace TI_Net2025_DemoCleanAsp.DAL.Repositories
                 command.CommandText = @$"INSERT INTO [User](EMAIL,USERNAME,PASSWORD,ROLE)
                                         VALUES(@email,@username,@password,@role)";
 
-                command.Parameters.AddWithValue("@email", entity.Email);
-                command.Parameters.AddWithValue("@username", entity.Username);
-                command.Parameters.AddWithValue("@password", entity.Password);
-                command.Parameters.AddWithValue("@role", entity.Role.ToString());
+                command.Parameters.AddWithValue("@email", user.Email);
+                command.Parameters.AddWithValue("@username", user.Username);
+                command.Parameters.AddWithValue("@password", user.Password);
+                command.Parameters.AddWithValue("@role", user.Role.ToString());
 
                 connection.Open();
 

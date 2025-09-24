@@ -17,8 +17,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<ProductRepository>();
+builder.Services.AddScoped<CategoryRepository>();
 
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<ProductService>();
 
 var app = builder.Build();
 

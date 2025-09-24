@@ -1,8 +1,4 @@
-﻿-- Nettoyage avant réinsertion
-TRUNCATE TABLE Product;
-TRUNCATE TABLE Category;
-
--- Catégories
+﻿-- Catégories
 INSERT INTO Category ([Name]) VALUES
 ('Informatique'),
 ('Électronique'),
