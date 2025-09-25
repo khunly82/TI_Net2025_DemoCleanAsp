@@ -32,15 +32,34 @@ namespace TI_Net2025_DemoCleanAsp.DAL.Repositories
             }
         }
 
-        public List<Product> GetAllWithCategory()
+        public List<Product> GetAllWithCategory(int page, string? name, int? minPrice, int? maxPrice, int? categoryId)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             using (SqlCommand command = connection.CreateCommand())
             {
-                command.CommandText = @"SELECT * 
+                command.CommandText = @"SELECT 
+                                            p.Id as Id,
+                                            p.Name as Name,
+                                            p.Description as Description,
+                                            p.Price as Price,
+                                            p.CategoryId as CategoryId,
+                                            c.Name as CategoryName
                                         FROM [Product] p
                                         JOIN [Category] c 
-                                            ON p.CategoryId = c.Id";
+                                            ON p.CategoryId = c.Id 
+                                        WHERE   (p.Name LIKE @name OR @name is null) 
+                                            AND (p.Price >= @minPrice OR @minPrice is null)
+                                            AND (p.Price <= @maxPrice OR @maxPrice is null)
+                                            AND (p.CategoryId = @categoryId OR @categoryId is null)
+                                        ORDER BY p.Name
+                                        OFFSET @offset ROWS
+                                        FETCH NEXT 5 ROWS ONLY";
+
+                command.Parameters.AddWithValue("@name", name is null ? DBNull.Value : $"%{name}%");
+                command.Parameters.AddWithValue("@minPrice", minPrice is null ? DBNull.Value : minPrice);
+                command.Parameters.AddWithValue("@maxPrice", maxPrice is null ? DBNull.Value : maxPrice);
+                command.Parameters.AddWithValue("@categoryId", categoryId is null ? DBNull.Value : categoryId);
+                command.Parameters.AddWithValue("@offset", page * 5);
 
                 connection.Open();
 
@@ -89,7 +108,13 @@ namespace TI_Net2025_DemoCleanAsp.DAL.Repositories
             using (SqlConnection connection = new SqlConnection(_connectionString))
             using (SqlCommand command = connection.CreateCommand())
             {
-                command.CommandText = @"SELECT * 
+                command.CommandText = @"SELECT 
+                                            p.Id as Id,
+                                            p.Name as Name,
+                                            p.Description as Description,
+                                            p.Price as Price,
+                                            p.CategoryId as CategoryId,
+                                            c.Name as CategoryName
                                         FROM [Product] p
                                         JOIN [Category] c 
                                             ON p.CategoryId = c.Id
@@ -177,6 +202,29 @@ namespace TI_Net2025_DemoCleanAsp.DAL.Repositories
             }
         }
 
+        public int Count(string? name, int? minPrice, int? maxPrice, int? categoryId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                command.CommandText = @"SELECT COUNT(*) 
+                                        FROM [Product] p
+                                            WHERE   (p.Name LIKE @name OR @name is null) 
+                                                AND (p.Price >= @minPrice OR @minPrice is null)
+                                                AND (p.Price <= @maxPrice OR @maxPrice is null)
+                                                AND (p.CategoryId = @categoryId OR @categoryId is null)";
+
+                command.Parameters.AddWithValue("@name", name is null ? DBNull.Value : $"%{name}%");
+                command.Parameters.AddWithValue("@minPrice", minPrice is null ? DBNull.Value : minPrice);
+                command.Parameters.AddWithValue("@maxPrice", maxPrice is null ? DBNull.Value : maxPrice);
+                command.Parameters.AddWithValue("@categoryId", categoryId is null ? DBNull.Value : categoryId);
+
+                connection.Open();
+
+                return (int) command.ExecuteScalar();
+            }
+        }
+
         private Product MapProduct(SqlDataReader reader)
         {
             return new Product()
@@ -195,7 +243,7 @@ namespace TI_Net2025_DemoCleanAsp.DAL.Repositories
             product.Category = new Category()
             {
                 Id = (int) reader["CategoryId"],
-                Name = (string) reader["Name"],
+                Name = (string) reader["CategoryName"],
             };
 
             return product;

@@ -1,53 +1,90 @@
-﻿@model IEnumerable<TI_Net2025_DemoCleanAsp.Models.Product.ProductIndexDto>
+﻿@using TI_Net2025_DemoCleanAsp.Models.Category
+@using TI_Net2025_DemoCleanAsp.Models.Product
+
+@model (PageIndex<ProductIndexDto> Page, List<CategoryDto> Categories, ProductFilterFormDto filter)
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Liste de produits</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Ajouter un nouveau produit</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
+
+<form asp-controller="Product" asp-action="Index" method="get">
+    <div class="form-group">
+        <label id="Name">Nom de produit</label>
+        <input type="text" for="Name" name="Name" class="form-control" value="@Model.filter.Name" />
+    </div>
+    <div class="form-group">
+        <label id="MinPrice">Prix minimum</label>
+        <input type="number" for="MinPrice" name="MinPrice" class="form-control" value="@Model.filter.MinPrice" />
+    </div>
+    <div class="form-group">
+        <label id="MaxPrice">Prix maximum</label>
+        <input type="number" for="MaxPrice" name="MaxPrice" class="form-control" value="@Model.filter.MaxPrice" />
+    </div>
+    <div class="form-group">
+        <label id="Category">Catégorie</label>
+        <select for="Category" name="CategoryId" class="form-control form-select" >
+            <option value="@null"></option>
+            @foreach (var c in Model.Categories)
+            {
+                @if (Model.filter.CategoryId == c.Id)
+                {
+                    <option selected value="@c.Id">@c.Name</option>
+                }else
+                {
+                    <option value="@c.Id">@c.Name</option>
+                }
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Rechercher</button>
+</form>
+
+@if (Model.Page.Items.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Page.Items[0].Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Page.Items[0].Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Page.Items[0].Category)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model.Page.Items) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category)
+                </td>
+                <td>
+                
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+
+    @await Html.PartialAsync("Partials/_Pagination", Model.Page.Meta)
+
+}else
+{
+    <p>Pas de produit trouvé</p>
 }
-    </tbody>
-</table>

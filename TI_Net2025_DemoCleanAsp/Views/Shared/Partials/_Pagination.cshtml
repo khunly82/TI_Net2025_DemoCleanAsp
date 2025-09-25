@@ -1,0 +1,69 @@
+﻿@using TI_Net2025_DemoCleanAsp.Models.Product
+@using System.Web;
+
+@model PageIndexMeta
+
+@if(Model.ItemsCount < Model.TotalItems)
+{
+    int startRange = Model.Page < 4 ? 0 : Model.Page - 3;
+    int endRange = Model.Page > Model.TotalPages - 4 ? Model.TotalPages : Model.Page + 3;
+
+    var query = HttpUtility.ParseQueryString(Context.Request.QueryString.ToString());
+    query.Remove("page");
+
+    var routeValues = new Dictionary<string, string>();
+    foreach (string? key in query.AllKeys)
+    {
+        if (!string.IsNullOrEmpty(key))
+        {
+            routeValues[key] = query[key]!;
+        }
+    }
+
+    <nav>
+        <ul class="pagination">
+            @if(Model.Page > 0)
+            {
+                <li class="page-item">
+                    <a class="page-link"
+                    asp-controller="Product"
+                    asp-action="Index"
+                    asp-all-route-data="routeValues"
+                    asp-route-page="@(Model.Page - 1)" >Précédent</a>
+                </li>
+            }
+            @for(int i = startRange; i <= endRange; i++)
+            {
+                @if(i == Model.Page)
+                {
+                    <li class="page-item active">
+                        <a class="page-link" 
+                        asp-controller="Product"
+                        asp-action="Index"
+                        asp-all-route-data="routeValues"
+                        asp-route-page="@i">@(i + 1)</a>
+                    </li>
+                }else
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                        asp-controller="Product" 
+                        asp-action="Index" 
+                        asp-all-route-data="routeValues"
+                        asp-route-page="@i">@(i + 1)</a>
+                    </li>
+                }
+            }
+            @if(Model.Page < Model.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link"
+                    asp-controller="Product" 
+                    asp-action="Index"
+                    asp-all-route-data="routeValues"
+                    asp-route-page="@(Model.Page + 1)">Suivant</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

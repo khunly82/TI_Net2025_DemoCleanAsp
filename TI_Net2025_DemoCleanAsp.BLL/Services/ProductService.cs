@@ -1,4 +1,5 @@
-﻿using TI_Net2025_DemoCleanAsp.DAL.Repositories;
+﻿using Azure;
+using TI_Net2025_DemoCleanAsp.DAL.Repositories;
 using TI_Net2025_DemoCleanAsp.DL.Entities;
 
 namespace TI_Net2025_DemoCleanAsp.BLL.Services
@@ -12,9 +13,14 @@ namespace TI_Net2025_DemoCleanAsp.BLL.Services
             _productRepository = productRepository;
         }
 
-        public List<Product> GetAllWithCategory()
+        public List<Product> GetPageWithCategory(int page, string? name, int? minPrice, int? maxPrice, int? categoryId)
         {
-            return _productRepository.GetAllWithCategory();
+            return _productRepository.GetAllWithCategory(page,name, minPrice, maxPrice, categoryId);
+        }
+
+        public int Count(string? name, int? minPrice, int? maxPrice, int? categoryId)
+        {
+            return _productRepository.Count(name, minPrice, maxPrice, categoryId);
         }
     }
 }

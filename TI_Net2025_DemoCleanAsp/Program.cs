@@ -22,6 +22,7 @@ builder.Services.AddScoped<CategoryRepository>();
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<CategoryService>();
 
 var app = builder.Build();
 
