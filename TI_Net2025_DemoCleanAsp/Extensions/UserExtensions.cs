@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using System.Security.Principal;
 using TI_Net2025_DemoCleanAsp.DL.Enums;
 
 namespace TI_Net2025_DemoCleanAsp.Extensions
@@ -21,6 +22,11 @@ namespace TI_Net2025_DemoCleanAsp.Extensions
         }
 
         public static bool IsConnected(this ClaimsPrincipal claims)
+        {
+            return claims.Identity?.IsAuthenticated ?? false;
+        }
+
+        public static bool IsConnected(this IPrincipal claims)
         {
             return claims.Identity?.IsAuthenticated ?? false;
         }

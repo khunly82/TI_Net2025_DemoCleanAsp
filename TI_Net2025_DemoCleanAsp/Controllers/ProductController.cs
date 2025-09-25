@@ -22,9 +22,17 @@ namespace TI_Net2025_DemoCleanAsp.Controllers
         [HttpGet]
         public IActionResult Index([FromQuery] int page = 0, [FromQuery] ProductFilterFormDto? filters = null)
         {
-            List<ProductIndexDto> products = [.. _productService.GetPageWithCategory(page,filters?.Name,filters?.MinPrice,filters?.MaxPrice,filters?.CategoryId).Select(p => p.ToProductIndex())];
+            int? minPrice = filters?.MinPrice is decimal min 
+                ? (int)Math.Round(min * 100)
+                : null;
 
-            int totalItems = _productService.Count(filters?.Name, filters?.MinPrice, filters?.MaxPrice, filters?.CategoryId);
+            int? maxPrice = filters?.MaxPrice is decimal max
+                ? (int)Math.Round(max * 100m)
+                : null;
+
+            List<ProductIndexDto> products = [.. _productService.GetPageWithCategory(page, filters?.Name, minPrice, maxPrice, filters?.CategoryId).Select(p => p.ToProductIndex())];
+
+            int totalItems = _productService.Count(filters?.Name, minPrice, maxPrice, filters?.CategoryId);
 
             PageIndex<ProductIndexDto> pageIndex = new PageIndex<ProductIndexDto>()
             {
@@ -40,7 +48,7 @@ namespace TI_Net2025_DemoCleanAsp.Controllers
 
             List<CategoryDto> categories = [.. _categoryService.GetAll().Select(c => c.ToCategoryDto())];
 
-            return View((pageIndex,categories,filters));
+            return View((pageIndex, categories, filters));
         }
     }
 }

@@ -20,11 +20,11 @@
     </div>
     <div class="form-group">
         <label id="MinPrice">Prix minimum</label>
-        <input type="number" for="MinPrice" name="MinPrice" class="form-control" value="@Model.filter.MinPrice" />
+        <input step="0.01" type="number" for="MinPrice" name="MinPrice" class="form-control" value="@Model.filter.MinPrice" />
     </div>
     <div class="form-group">
         <label id="MaxPrice">Prix maximum</label>
-        <input type="number" for="MaxPrice" name="MaxPrice" class="form-control" value="@Model.filter.MaxPrice" />
+        <input step="0.01" type="number" for="MaxPrice" name="MaxPrice" class="form-control" value="@Model.filter.MaxPrice" />
     </div>
     <div class="form-group">
         <label id="Category">Catégorie</label>
@@ -69,13 +69,16 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Price)
+                    @Math.Round(item.Price / 100D, 2).ToString("F2") €
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Category)
                 </td>
                 <td>
-                
+                    <a class="btn btn-success" 
+                    asp-controller="Cart" 
+                    asp-action="AddItem" 
+                    asp-route-productId="@item.Id">Ajouter au panier</a>
                 </td>
             </tr>
     }
