@@ -18,9 +18,13 @@ namespace TI_Net2025_DemoCleanAsp.BLL.Services
         {
             var userCart = _cartRepository.GetWithCartLineByUserId(userId);
 
-            if (userCart == null || userCart!.Items.Count == 0)
+            if(userCart == null)
             {
                 userCart = _cartRepository.Add(userId);
+            }
+
+            if (userCart!.Items.Count == 0)
+            {
                 sessionCart.ForEach(sc => sc.CartId = userCart.Id);
                 _cartItemRepository.AddAll(sessionCart);
             }
