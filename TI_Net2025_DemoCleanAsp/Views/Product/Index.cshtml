@@ -1,4 +1,5 @@
-﻿@using TI_Net2025_DemoCleanAsp.Models.Category
+﻿@using System.Web
+@using TI_Net2025_DemoCleanAsp.Models.Category
 @using TI_Net2025_DemoCleanAsp.Models.Product
 
 @model (PageIndex<ProductIndexDto> Page, List<CategoryDto> Categories, ProductFilterFormDto filter)
@@ -9,9 +10,12 @@
 
 <h1>Liste de produits</h1>
 
-<p>
-    <a asp-action="Create">Ajouter un nouveau produit</a>
-</p>
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        <a class="btn btn-primary" asp-action="Create">Ajouter un nouveau produit</a>
+    </p>
+}
 
 <form asp-controller="Product" asp-action="Index" method="get">
     <div class="form-group">
@@ -28,14 +32,15 @@
     </div>
     <div class="form-group">
         <label id="Category">Catégorie</label>
-        <select for="Category" name="CategoryId" class="form-control form-select" >
+        <select for="Category" name="CategoryId" class="form-control form-select">
             <option value="@null"></option>
             @foreach (var c in Model.Categories)
             {
                 @if (Model.filter.CategoryId == c.Id)
                 {
                     <option selected value="@c.Id">@c.Name</option>
-                }else
+                }
+                else
                 {
                     <option value="@c.Id">@c.Name</option>
                 }
@@ -63,31 +68,64 @@
             </tr>
         </thead>
         <tbody>
-    @foreach (var item in Model.Page.Items) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Math.Round(item.Price / 100D, 2).ToString("F2") €
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Category)
-                </td>
-                <td>
-                    <a class="btn btn-success" 
-                    asp-controller="Cart" 
-                    asp-action="AddItem" 
-                    asp-route-productId="@item.Id">Ajouter au panier</a>
-                </td>
-            </tr>
-    }
+            @foreach (var item in Model.Page.Items)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Math.Round(item.Price / 100D, 2).ToString("F2") €
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Category)
+                    </td>
+                    <td>
+                        <a class="btn btn-success"
+                           asp-controller="Cart"
+                           asp-action="AddItem"
+                           asp-route-productId="@item.Id">Ajouter au panier</a>
+                        @if(User.IsInRole("Admin"))
+                        {
+                            var query = HttpUtility.ParseQueryString(Context.Request.QueryString.ToString());
+
+                            var routeValues = new Dictionary<string, string>();
+                            foreach (string? key in query.AllKeys)
+                            {
+                                if (!string.IsNullOrEmpty(key))
+                                {
+                                    routeValues[key] = query[key]!;
+                                }
+                            }
+
+                            var deleteValues = new Dictionary<string, string>(routeValues)
+                            {
+                                ["id"] = item.Id.ToString()
+                            };
+
+
+                            <a class="btn btn-warning"
+                               asp-controller="Product"
+                               asp-action="Update"
+                               asp-route-id="@item.Id">Modifier</a>
+                            <form class="d-inline"
+                                  method="post"
+                                  asp-controller="Product"
+                                  asp-action="Delete"
+                                  asp-all-route-data="deleteValues">
+                                <button type="submit" class="btn btn-danger">Supprimer</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 
     @await Html.PartialAsync("Partials/_Pagination", Model.Page.Meta)
 
-}else
+}
+else
 {
     <p>Pas de produit trouvé</p>
 }

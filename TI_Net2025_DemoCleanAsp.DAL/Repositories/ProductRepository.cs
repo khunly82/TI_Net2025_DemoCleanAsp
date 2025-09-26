@@ -32,7 +32,7 @@ namespace TI_Net2025_DemoCleanAsp.DAL.Repositories
             }
         }
 
-        public List<Product> GetAllWithCategory(int page, string? name, int? minPrice, int? maxPrice, int? categoryId)
+        public List<Product> GetPageWithCategory(int page, string? name, int? minPrice, int? maxPrice, int? categoryId)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             using (SqlCommand command = connection.CreateCommand())

@@ -15,5 +15,27 @@ namespace TI_Net2025_DemoCleanAsp.Mappers
                 Category = p.Category!.Name
             };
         }
+
+        public static ProductFormDto ToProductForm(this Product p)
+        {
+            return new ProductFormDto()
+            {
+                Name = p.Name,
+                Description = p.Description,
+                Price = Math.Round(p.Price / 100m, 2),
+                CategoryId = p.CategoryId,
+            };
+        }
+
+        public static Product ToProduct(this ProductFormDto p)
+        {
+            return new Product()
+            {
+                Name = p.Name,
+                Description = p.Description,
+                Price = (int) Math.Round(p.Price * 100m),
+                CategoryId = p.CategoryId,
+            };
+        }
     }
 }

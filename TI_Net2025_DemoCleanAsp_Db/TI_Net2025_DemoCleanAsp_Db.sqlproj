@@ -69,4 +69,7 @@
   <ItemGroup>
     <PostDeploy Include="Scripts\InitData.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="TI_Net2025_DemoCleanAsp_Db_1.publish.xml" />
+  </ItemGroup>
 </Project>

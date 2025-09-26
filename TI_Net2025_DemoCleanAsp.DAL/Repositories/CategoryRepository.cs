@@ -31,6 +31,26 @@ namespace TI_Net2025_DemoCleanAsp.DAL.Repositories
             }
         }
 
+        public bool ExistById(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                command.CommandText = @$"SELECT 
+                                         cast(CASE WHEN EXISTS (
+                                            SELECT 1 FROM Product WHERE Id = @id) 
+                                             THEN 1 
+                                             ELSE 0 
+                                         END as bit) AS isExisting;";
+
+                command.Parameters.AddWithValue("@id", id);
+
+                connection.Open();
+
+                return (bool)command.ExecuteScalar();
+            }
+        }
+
         private Category MapCategory(SqlDataReader reader)
         {
             return new Category()

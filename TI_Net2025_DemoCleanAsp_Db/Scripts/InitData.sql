@@ -1,4 +1,10 @@
 ﻿-- Catégories
+CREATE TYPE CartItemTableType AS TABLE
+(
+    ProductId INT,
+    Quantity INT
+);
+
 INSERT INTO Category ([Name]) VALUES
 ('Informatique'),
 ('Électronique'),
