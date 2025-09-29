@@ -7,12 +7,12 @@ a.navbar-brand {
   word-break: break-all;
 }
 
-a {
-  color: #0077cc;
+.nav-link {
+  text-decoration: underline!important;
 }
 
 .btn-primary {
-  color: #fff;
+  color: gray;
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
