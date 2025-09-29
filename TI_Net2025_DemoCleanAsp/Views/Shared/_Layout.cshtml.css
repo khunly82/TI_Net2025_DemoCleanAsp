@@ -11,6 +11,10 @@ a.navbar-brand {
   text-decoration: underline!important;
 }
 
+.nav-link {
+    font-weight: bold;
+}
+
 .btn-primary {
   color: gray;
   background-color: #1b6ec2;
@@ -45,4 +49,5 @@ button.accept-policy {
   width: 100%;
   white-space: nowrap;
   line-height: 60px;
+  background: chartreuse;
 }
