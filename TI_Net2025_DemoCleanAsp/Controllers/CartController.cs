@@ -73,6 +73,7 @@ namespace TI_Net2025_DemoCleanAsp.Controllers
                 _cartService.DeleteItem(id, User.GetId());
             }
             return Ok();
+
         }
 
 
