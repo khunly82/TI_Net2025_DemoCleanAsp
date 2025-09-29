@@ -7,12 +7,12 @@ a.navbar-brand {
   word-break: break-all;
 }
 
-a {
-  color: #0077cc;
+* {
+  color: hotpink!important;
 }
 
 .btn-primary {
-  color: #fff;
+  color: hotpink;
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
