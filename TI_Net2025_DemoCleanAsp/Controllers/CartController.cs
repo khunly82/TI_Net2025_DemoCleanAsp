@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TI_Net2025_DemoCleanAsp.BLL.Services;
+using TI_Net2025_DemoCleanAsp.DL.Entities;
 using TI_Net2025_DemoCleanAsp.Extensions;
 using TI_Net2025_DemoCleanAsp.Models.CartItem;
 
@@ -9,10 +10,12 @@ namespace TI_Net2025_DemoCleanAsp.Controllers
     {
 
         private readonly CartService _cartService;
+        private readonly ProductService _productService;
 
-        public CartController(CartService cartService)
+        public CartController(CartService cartService, ProductService productService)
         {
             _cartService = cartService;
+            _productService = productService;
         }
 
         public IActionResult AddItem([FromQuery] int productId)
@@ -39,5 +42,39 @@ namespace TI_Net2025_DemoCleanAsp.Controllers
 
             return RedirectToAction("Index", "Product");
         }
+
+        [HttpGet("api/cart")]
+        public IActionResult GetCart()
+        {
+            var cart = HttpContext.Session.GetItem<List<CartItemSessionDto>>("cart") ?? [];
+
+            foreach (var item in cart)
+            {
+                Product p = _productService.GetById(item.ProductId)!;
+                item.ProductPrice = p.Price;
+                item.ProductName = p.Name;
+            }
+
+            return Ok(cart);
+        }
+
+        [HttpDelete("api/cart/{id}")]
+        public IActionResult DeleteItem([FromRoute]int id)
+        {
+            var cart = HttpContext.Session.GetItem<List<CartItemSessionDto>>("cart");
+            if(cart != null)
+            {
+                cart = cart.Where(item => item.ProductId != id).ToList();
+                HttpContext.Session.SetItem("cart", cart);
+            }
+
+            if(User.IsConnected())
+            {
+                _cartService.DeleteItem(id, User.GetId());
+            }
+            return NoContent();
+        }
+
+
     }
 }

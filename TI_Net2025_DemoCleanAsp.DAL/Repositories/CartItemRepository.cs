@@ -61,5 +61,20 @@ namespace TI_Net2025_DemoCleanAsp.DAL.Repositories
             }
         }
 
+        public void Delete(int id, int userId)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            using var command = connection.CreateCommand();
+            command.CommandText = @"
+                DELETE FROM CartItem
+                WHERE ProductId = @id AND CartId = (
+                    SELECT Id FROM Cart WHERE UserId = @userId
+                )
+            ";
+            command.Parameters.AddWithValue("id", id);
+            command.Parameters.AddWithValue("userId", userId);
+            connection.Open();
+            command.ExecuteNonQuery();
+        }
     }
 }

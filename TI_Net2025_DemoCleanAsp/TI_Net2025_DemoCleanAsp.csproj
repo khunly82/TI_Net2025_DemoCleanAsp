@@ -15,4 +15,13 @@
     <ProjectReference Include="..\TI_Net2025_DemoCleanAsp.DL\TI_Net2025_DemoCleanAsp.DL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ReactApp\" />
+    <Folder Include="wwwroot\js\panier\" />
+  </ItemGroup>
+
+	<Target Name="Build React App" BeforeTargets="Build">
+		<Exec Command="cd ReactApp\Panier &amp;&amp; npm run build"></Exec>
+	</Target>
+
 </Project>

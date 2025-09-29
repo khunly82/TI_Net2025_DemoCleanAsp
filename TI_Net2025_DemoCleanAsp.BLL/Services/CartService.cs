@@ -67,5 +67,10 @@ namespace TI_Net2025_DemoCleanAsp.BLL.Services
         {
             return _cartRepository.GetWithCartLineByUserId(userId);
         }
+
+        public void DeleteItem(int id, int userId)
+        {
+            _cartItemRepository.Delete(id, userId);
+        }
     }
 }
